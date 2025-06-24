@@ -1,7 +1,8 @@
 Flask
 flask-cors
-pyttsx3
-vosk
 soundfile
 pydub
 TTS
+openai-whisper
+torch
+ffmpeg-python

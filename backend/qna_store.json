@@ -1,8 +1,25 @@
 {
   "hello": "Hi there! How can I help you?",
-    "hi": "Hi there! How can I help you?",
-  "what is your name": "I am alexa the Receptionist Robot.",
-    "who are you": "I am alexa the Receptionist Robot.",
+  "hi": "Hi there! How can I help you?",
+  "what is your name": "I am Alexa, the Receptionist Robot.",
+  "what is your name?": "I am Alexa, the Receptionist Robot.",
+  "who are you": "I am Alexa, your friendly Receptionist Robot.",
+  "who are you?": "I am Alexa, your friendly Receptionist Robot.",
+  "bye": "Goodbye! Have a great day.",
+    "bye!": "Goodbye! Have a great day.",
 
-  "bye": "Goodbye! Have a great day."
+  "what can you do": "I can answer your questions, provide directions, and assist you with information about this office.",
+  "what can you do?": "I can answer your questions, provide directions, and assist you with information about this office.",
+  "where is the manager's office": "The manager's office is on the second floor, room 201.",
+  "where is the manager's office?": "The manager's office is on the second floor, room 201.",
+  "can you help me": "Of course! Please tell me how I can assist you.",
+  "can you help me?": "Of course! Please tell me how I can assist you.",
+  "thank you": "You're welcome! If you need anything else, just ask.",
+  "thank you?": "You're welcome! If you need anything else, just ask.",
+  "what time is it": "I'm a robot, but you can check the clock on the wall for the current time.",
+  "what time is it?": "I'm a robot, but you can check the clock on the wall for the current time.",
+  "who built you": "I was created by the team at Avron Labs to help visitors like you.",
+  "who built you?": "I was created by the team at Avron Labs to help visitors like you.",
+  "can you call someone": "I'm not able to make calls, but I can provide information or direct you to the right person.",
+  "can you call someone?": "I'm not able to make calls, but I can provide information or direct you to the right person."
 }

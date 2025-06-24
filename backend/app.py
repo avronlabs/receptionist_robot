@@ -3,12 +3,9 @@ from flask_cors import CORS
 import json
 import os
 import uuid
+import re
 from speech import tts  # ✅ Assuming tts.py is inside /speech
-from vosk import Model, KaldiRecognizer
-import soundfile as sf
-import io
-import tempfile
-import subprocess
+
 from speech.stt import transcribe_audio_file
 
 app = Flask(__name__)
@@ -22,15 +19,20 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 with open(QNA_PATH, 'r') as f:
     qna_store = json.load(f)
 
-# Load Vosk model once at startup
-VOSK_MODEL_PATH = os.path.join(os.path.dirname(__file__), 'vosk-model')
-vosk_model = Model(VOSK_MODEL_PATH)
+def preprocess_message(message):
+    # Remove wake word (alexa) if present at the start
+    message = message.strip().lower()
+    message = re.sub(r'^alexa[\s,]+', '', message)
+    # Remove punctuation at the end
+    message = message.rstrip(' .!?')
+    return message
 
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.get_json()
     message = data.get('message', '').strip().lower()
-    answer = qna_store.get(message, "Sorry, I don't know the answer to that.")
+    processed_message = preprocess_message(message)
+    answer = qna_store.get(processed_message, "Sorry, I don't know the answer to that.")
 
     # Generate unique filename for each response
     audio_filename = f"response_{uuid.uuid4().hex}.mp3"
