@@ -1,12 +1,14 @@
-import pvporcupine
+import vosk
 import pyaudio
-import struct
 import asyncio
 import websockets
 import threading
 import socket
+import json
+import os
 
-ACCESS_KEY = "mRUsrLGLMuHdFfA+AKleyeVe4eukNFSzVrl4/zL1OrSMUn8TwxaJCg=="  # Replace with your actual key
+WAKE_WORD = "alexa"
+VOSK_MODEL_PATH = os.path.join(os.path.dirname(__file__), "vosk-model")
 
 # WebSocket server globals
 clients = set()
@@ -32,34 +34,37 @@ def start_ws_server():
 ws_thread = threading.Thread(target=start_ws_server, daemon=True)
 ws_thread.start()
 
-# Wake word detection
-porcupine = pvporcupine.create(access_key=ACCESS_KEY, keywords=["alexa"], sensitivities=[1])
+# Wake word detection using Vosk
+if not os.path.exists(VOSK_MODEL_PATH):
+    raise FileNotFoundError(f"Vosk model not found at {VOSK_MODEL_PATH}")
+model = vosk.Model(VOSK_MODEL_PATH)
+rec = vosk.KaldiRecognizer(model, 16000)
 pa = pyaudio.PyAudio()
 stream = pa.open(
-    rate=porcupine.sample_rate,
+    rate=16000,
     channels=1,
     format=pyaudio.paInt16,
     input=True,
-    frames_per_buffer=porcupine.frame_length
+    frames_per_buffer=1024
 )
 
-print("[WakeWord] Listening for wake word...")
+print("[WakeWord] Listening for wake word using Vosk...")
 try:
     while True:
-        pcm = stream.read(porcupine.frame_length, exception_on_overflow=False)
-        pcm = struct.unpack_from("h" * porcupine.frame_length, pcm)
-        keyword_index = porcupine.process(pcm)
-        if keyword_index >= 0:
-            print("Wake word detected!")
-            # Notify all connected WebSocket clients
-            async def notify_clients():
-                await asyncio.gather(*[client.send("wakeword") for client in clients])
-            asyncio.run(notify_clients())
-            # Here you can trigger your STT pipeline or send a signal to your backend/frontend
+        data = stream.read(1024, exception_on_overflow=False)
+        if rec.AcceptWaveform(data):
+            result = json.loads(rec.Result())
+            text = result.get("text", "").lower()
+            if WAKE_WORD in text:
+                print("Wake word detected!")
+                # Notify all connected WebSocket clients
+                async def notify_clients():
+                    await asyncio.gather(*[client.send("wakeword") for client in clients])
+                asyncio.run(notify_clients())
 except KeyboardInterrupt:
     print("Stopping wake word listener.")
 finally:
     stream.stop_stream()
     stream.close()
     pa.terminate()
-    porcupine.delete()
+    # No explicit delete needed for vosk.Model
