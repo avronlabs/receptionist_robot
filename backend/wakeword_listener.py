@@ -33,7 +33,7 @@ ws_thread = threading.Thread(target=start_ws_server, daemon=True)
 ws_thread.start()
 
 # Wake word detection
-porcupine = pvporcupine.create(access_key=ACCESS_KEY, keywords=["alexa"], sensitivities=[0.7])
+porcupine = pvporcupine.create(access_key=ACCESS_KEY, keywords=["alexa"], sensitivities=[1])
 pa = pyaudio.PyAudio()
 stream = pa.open(
     rate=porcupine.sample_rate,

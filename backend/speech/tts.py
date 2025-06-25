@@ -3,7 +3,7 @@ from TTS.api import TTS
 from pydub import AudioSegment
 
 # Download and load the default English TTS model (first time only)
-tts = TTS(model_name="tts_models/en/ljspeech/tacotron2-DDC", progress_bar=False, gpu=False)
+tts = TTS(model_name="tts_models/en/ljspeech/vits", progress_bar=False, gpu=False)
 
 def text_to_speech(text, filename, keep_last_n=10):
     """
