@@ -1,3 +1,4 @@
 robot_env
 /backend/static/audio
 /backend/speech/__pycache__
+/backend/__pycache__
