@@ -1,22 +1,35 @@
 import os
-from TTS.api import TTS
+import subprocess
 from pydub import AudioSegment
 
-# Download and load the default English TTS model (first time only)
-tts = TTS(model_name="tts_models/en/ljspeech/vits", progress_bar=False, gpu=False)
+# Set the path to the Piper executable and model
+PIPER_PATH = os.environ.get(
+    "PIPER_PATH",
+    os.path.join(os.path.dirname(__file__), "piper-desktop/piper")
+)  # Looks for piper_bin in the same directory as this script
+PIPER_MODEL = os.environ.get(
+    "PIPER_MODEL",
+    # os.path.join(os.path.dirname(__file__), "piper-desktop/en_US-ljspeech-high.onnx")
+    os.path.join(os.path.dirname(__file__), "piper-desktop/en_US-lessac-medium.onnx")
+)
+
 
 def text_to_speech(text, filename, keep_last_n=10):
     """
-    Convert text to speech using Coqui TTS and save as an MP3 file.
+    Convert text to speech using Piper and save as an MP3 file.
     Keeps only the last `keep_last_n` audio files in the output directory.
     Args:
         text (str): The text to convert.
         filename (str): The output MP3 file path.
         keep_last_n (int): Number of audio files to keep in the output directory.
     """
-    # Synthesize speech to a temporary WAV file
     tmp_wav = filename.replace('.mp3', '.wav')
-    tts.tts_to_file(text=text, file_path=tmp_wav)
+    command = [
+        PIPER_PATH,
+        "--model", PIPER_MODEL,
+        "--output_file", tmp_wav
+    ]
+    subprocess.run(command, input=text.strip() + '\n', text=True, check=True)
     # Convert WAV to MP3
     sound = AudioSegment.from_wav(tmp_wav)
     sound.export(filename, format="mp3")
@@ -35,5 +48,5 @@ def text_to_speech(text, filename, keep_last_n=10):
 
 if __name__ == "__main__":
     # Test
-    text_to_speech("Hello, this is Coqui TTS speaking!", "test_output.mp3")
+    text_to_speech("Hello, this is Piper TTS speaking!", "test_output.mp3")
     print("Test audio saved as test_output.mp3")
