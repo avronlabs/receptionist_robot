@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { askAssistant } from '../lib/api';
 import VoiceInput from './VoiceInput';
 import AudioPlayer from './AudioPlayer';
-import { Mic,  } from 'lucide-react';
+import { Mic, } from 'lucide-react';
 
 function ListeningWave({ active, idle }) {
   // Animate dots for both listening and idle (wakeup detection) states
@@ -131,13 +131,12 @@ export default function ChatBox() {
           </div>
         )}
         <VoiceInput
-  ref={voiceInputRef}
-  onResult={handleVoiceResult}
-  disabled={isLoading}
-  onListening={handleVoiceListening}
-  onTranscript={handleVoiceTranscript}
-  useWakeWord={true}
-/>
+          ref={voiceInputRef}
+          onResult={handleVoiceResult}
+          disabled={isLoading}
+          onListening={handleVoiceListening}
+          onTranscript={handleVoiceTranscript}
+        />
       </div>
       {/* Message area, scrollable if needed */}
       <div className="w-full px-4 flex flex-col flex-1 items-center justify-end pointer-events-none overflow-y-auto" style={{ maxWidth: '100vw', minHeight: 0 }}>

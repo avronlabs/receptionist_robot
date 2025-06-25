@@ -9,7 +9,11 @@ export async function askAssistant(message) {
 
 export async function transcribeAudio(audioBlob) {
   const formData = new FormData();
-  formData.append('audio', audioBlob, 'audio.wav');
+  // Use the correct extension based on the blob type
+  let ext = 'webm';
+  if (audioBlob.type === 'audio/wav') ext = 'wav';
+  else if (audioBlob.type === 'audio/ogg') ext = 'ogg';
+  formData.append('audio', audioBlob, `audio.${ext}`);
   const res = await fetch('http://localhost:5050/api/transcribe', {
     method: 'POST',
     body: formData,

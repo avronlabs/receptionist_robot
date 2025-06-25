@@ -51,12 +51,14 @@ def serve_audio(filename):
 @app.route('/api/transcribe', methods=['POST'])
 def transcribe_audio():
     if 'audio' not in request.files:
+        print("No audio file in request.files")
         return jsonify({'error': 'No audio file provided'}), 400
     audio_file = request.files['audio']
+    print("Received audio file:", audio_file.filename, audio_file.content_type)
     audio_bytes = audio_file.read()
-    # Use stt.py for transcription
     result = transcribe_audio_file(audio_bytes, input_ext='.webm')
     if 'error' in result:
+        print("Transcription error:", result['error'])
         return jsonify({'error': result['error']}), 400
     return jsonify({'text': result['text']})
 
