@@ -6,3 +6,7 @@ TTS
 openai-whisper
 torch
 ffmpeg-python
+pvporcupine
+pyaudio
+websockets
+numpy
