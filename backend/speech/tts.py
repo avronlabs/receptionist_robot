@@ -10,7 +10,7 @@ PIPER_PATH = os.environ.get(
 PIPER_MODEL = os.environ.get(
     "PIPER_MODEL",
     # os.path.join(os.path.dirname(__file__), "piper-desktop/en_US-ljspeech-high.onnx")
-    os.path.join(os.path.dirname(__file__), "piper-models/en_US-lessac-medium.onnx")
+    os.path.join(os.path.dirname(__file__), "piper-models/en_US-amy-medium.onnx")
 )
 
 
