@@ -1,4 +1,7 @@
 robot_env
 /backend/static/audio
 /backend/__pycache__
-/backend/speech/piper_model
+/backend/speech/piper-models/*.onnx
+/backend/speech/piper-models/*.onnx.json
+/backend/speech/piper-models/**/*.onnx
+/backend/speech/piper-models/**/*.onnx.json
