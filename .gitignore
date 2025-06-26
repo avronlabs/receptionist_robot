@@ -5,3 +5,7 @@ robot_env
 /backend/speech/piper-models/*.onnx.json
 /backend/speech/piper-models/**/*.onnx
 /backend/speech/piper-models/**/*.onnx.json
+backend/speech/__pycache__/stt.cpython-310.pyc
+backend/speech/__pycache__/tts.cpython-310.pyc
+backend/__pycache__/app.cpython-310.pyc
+
