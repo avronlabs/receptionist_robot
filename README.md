@@ -101,6 +101,18 @@ npm install
 - For Raspberry Pi, ensure you have enough RAM (2GB+ recommended for TTS).
 - If running on different machines, update API/WebSocket URLs in the frontend config files.
 
+## Download Piper models (required for TTS)
+After cloning the repository, download the Piper model files (not included in git):
+
+```bash
+cd backend/speech/piper-desktop
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-lessac-medium/en_US-lessac-medium.onnx
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-lessac-medium/en_US-lessac-medium.onnx.json
+```
+
+- Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
+- You may use a different model if you wish; update the path in `tts.py` accordingly.
+
 ## 8. Updating the Code
 - To pull the latest changes:
   ```bash

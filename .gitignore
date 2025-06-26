@@ -2,3 +2,5 @@ robot_env
 /backend/static/audio
 /backend/__pycache__
 /backend/speech/__pycache__
+/backend/speech/piper-desktop/*.onnx
+/backend/speech/piper-desktop/*.onnx.json
