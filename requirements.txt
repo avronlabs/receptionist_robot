@@ -1,10 +1,10 @@
 Flask
 flask-cors
 pydub
-TTS
 openai-whisper
 torch
 ffmpeg-python
 pyaudio
 websockets
 numpy
+vosk

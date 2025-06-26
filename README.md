@@ -81,7 +81,7 @@ npm install
     cd backend
     flask run --host=0.0.0.0 --port=5050
     ```
-  - **Wake Word Listener (Porcupine WebSocket):**
+  - **Wake Word Listener (Vosk WebSocket):**
     ```bash
     source robot_env/bin/activate
     cd backend
@@ -96,7 +96,7 @@ npm install
 - The backend (Flask), wake word listener, and frontend (Next.js) will start. Your browser should open automatically if using the script.
 
 ## 7. Notes
-- The first time you use Coqui TTS, it will download the model (requires internet).
+- The first time you use Whisper or TTS, it may download models (requires internet).
 - If you move `requirements.txt` to the main directory, always install dependencies from there.
 - For Raspberry Pi, ensure you have enough RAM (2GB+ recommended for TTS).
 - If running on different machines, update API/WebSocket URLs in the frontend config files.
@@ -105,9 +105,10 @@ npm install
 After cloning the repository, download the Piper model files (not included in git):
 
 ```bash
-cd backend/speech/piper-desktop
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-lessac-medium/en_US-lessac-medium.onnx
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-lessac-medium/en_US-lessac-medium.onnx.json
+cd backend/speech/piper-models
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
+# Or download other models as needed
 ```
 
 - Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
