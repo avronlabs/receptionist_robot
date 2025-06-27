@@ -106,8 +106,9 @@ After cloning the repository, download the Piper model files (not included in gi
 
 ```bash
 cd backend/speech/piper-models
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx
+
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json
 # Or download other models as needed
 ```
 
