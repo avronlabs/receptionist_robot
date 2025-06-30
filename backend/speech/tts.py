@@ -5,8 +5,9 @@ from pydub import AudioSegment
 # Set the path to the Piper executable and model
 PIPER_PATH = os.environ.get(
     "PIPER_PATH",
+    # change piper-desktop to piper-rpi if running on Raspberry Pi
     os.path.join(os.path.dirname(__file__), "piper-desktop/piper")
-)  # change piper-desktop to piper-rpi if running on Raspberry Pi
+)  
 PIPER_MODEL = os.environ.get(
     "PIPER_MODEL",
     #update this path if you use a different model
