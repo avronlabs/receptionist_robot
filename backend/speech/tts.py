@@ -6,10 +6,10 @@ from pydub import AudioSegment
 PIPER_PATH = os.environ.get(
     "PIPER_PATH",
     os.path.join(os.path.dirname(__file__), "piper-desktop/piper")
-)  # Looks for piper_bin in the same directory as this script
+)  # change piper-desktop to piper-rpi if running on Raspberry Pi
 PIPER_MODEL = os.environ.get(
     "PIPER_MODEL",
-    # os.path.join(os.path.dirname(__file__), "piper-desktop/en_US-ljspeech-high.onnx")
+    #update this path if you use a different model
     os.path.join(os.path.dirname(__file__), "piper-models/en_US-amy-medium.onnx")
 )
 
