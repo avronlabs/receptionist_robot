@@ -81,10 +81,9 @@ After cloning the repository, download the Piper model files (not included in gi
 
 ```bash
 cd backend/speech/piper-models
-
 wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
-
 wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
+---
 
 # Or download other models as needed
 - The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
@@ -93,13 +92,7 @@ wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-mediu
 - Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
 - You may use a different model if you wish; update the path in `tts.py` accordingly.
 
-## 8. Updating the Code
-- To pull the latest changes:
-  ```bash
-  git pull origin master  # or main, depending on your branch
-  ```
 
----
 
 
 ## 7. Running the Application
@@ -144,7 +137,11 @@ wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-mediu
 
   Extract the archive and place the `piper` binary in `backend/speech/piper-desktop/`.
 
-
+## 9. Updating the Code
+- To pull the latest changes:
+  ```bash
+  git pull origin master  # or main, depending on your branch
+  ```
 
 For troubleshooting or advanced configuration, see the project wiki or contact the maintainer.
 
