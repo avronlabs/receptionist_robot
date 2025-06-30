@@ -76,8 +76,33 @@ rm -rf node_modules package-lock.json
 cd receptionist-robot-ui
 npm install
 ```
+## 6. Download Piper models (required for TTS)
+After cloning the repository, download the Piper model files (not included in git):
 
-## 6. Running the Application
+```bash
+cd backend/speech/piper-models
+
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
+
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
+
+# Or download other models as needed
+- The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
+- Place the downloaded `.onnx` and `.onnx.json` files in the `backend/speech/piper-models` directory.
+
+- Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
+- You may use a different model if you wish; update the path in `tts.py` accordingly.
+
+## 8. Updating the Code
+- To pull the latest changes:
+  ```bash
+  git pull origin master  # or main, depending on your branch
+  ```
+
+---
+
+
+## 7. Running the Application
 - **Recommended:** Use the provided script to start all servers:
   ```bash
   ./start_receptionist_robot.sh
@@ -103,7 +128,7 @@ npm install
     ```
 - The backend (Flask), wake word listener, and frontend (Next.js) will start. Your browser should open automatically if using the script.
 
-## 7. Notes
+## 8. Notes
 - The first time you use Whisper or TTS, it may download models (requires internet).
 - If you move `requirements.txt` to the main directory, always install dependencies from there.
 - For Raspberry Pi, ensure you have enough RAM (2GB+ recommended for TTS).
@@ -119,27 +144,7 @@ npm install
 
   Extract the archive and place the `piper` binary in `backend/speech/piper-desktop/`.
 
-## Download Piper models (required for TTS)
-After cloning the repository, download the Piper model files (not included in git):
 
-```bash
-cd backend/speech/piper-models
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
-# Or download other models as needed
-- The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
-- Place the downloaded `.onnx` and `.onnx.json` files in the `backend/speech/piper-models` directory.
-
-- Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
-- You may use a different model if you wish; update the path in `tts.py` accordingly.
-
-## 8. Updating the Code
-- To pull the latest changes:
-  ```bash
-  git pull origin master  # or main, depending on your branch
-  ```
-
----
 
 For troubleshooting or advanced configuration, see the project wiki or contact the maintainer.
 
