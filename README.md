@@ -85,14 +85,32 @@ cd backend/speech/piper-models
 wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
 
 wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
-  ```
+```
 
 ### Or download other models as needed
 - The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
 - Place the downloaded `.onnx` and `.onnx.json` files in the `backend/speech/piper-models` directory.
-
 - Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
 - You may use a different model if you wish; update the path in `tts.py` accordingly.
+
+## 6.1. Set the Piper Executable Path
+Depending on your system, you must set the correct Piper executable in `backend/speech/tts.py`:
+
+- **For Desktop Linux (x86_64/AMD64):**
+  - Use: `piper-desktop/piper`
+- **For Raspberry Pi (ARM64):**
+  - Use: `piper-rpi/piper`
+
+You can set this by editing the `PIPER_PATH` in `tts.py` or by setting the `PIPER_PATH` environment variable before running the backend:
+
+```bash
+# Example for Raspberry Pi
+export PIPER_PATH=backend/speech/piper-rpi/piper
+# Example for Desktop Linux
+export PIPER_PATH=backend/speech/piper-desktop/piper
+```
+
+If you do not set the environment variable, make sure the default in `tts.py` matches your system.
 
 
 
