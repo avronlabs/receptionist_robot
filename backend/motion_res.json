@@ -1,0 +1,9 @@
+{
+  "FORWARD": "Moving forward.",
+  "BACKWARD": "Reversing.",
+  "LEFT": "Turning left.",
+  "RIGHT": "Turning right.",
+  "STOP": "Stopping.",
+  "LED_ON": "Turning the lights on.",
+  "LED_OFF": "Turning the lights off."
+}

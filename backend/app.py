@@ -13,12 +13,18 @@ app = Flask(__name__)
 CORS(app)
 
 QNA_PATH = os.path.join(os.path.dirname(__file__), '../backend/qna_store.json')
+MOTION_RES_PATH = os.path.join(os.path.dirname(__file__), '../backend/motion_res.json')
+
 AUDIO_DIR = os.path.join(os.path.dirname(__file__), 'static/audio')
 os.makedirs(AUDIO_DIR, exist_ok=True)
 
 # Load QnA store
 with open(QNA_PATH, 'r') as f:
     qna_store = json.load(f)
+
+# Load motion response
+with open(MOTION_RES_PATH, 'r') as f:
+    MOTION_RES = json.load(f)
 
 def preprocess_message(message):
     # Remove wake word (alexa) if present at the start
@@ -33,7 +39,13 @@ def ask():
     data = request.get_json()
     message = data.get('message', '').strip().lower()
     processed_message = preprocess_message(message)
-    answer = qna_store.get(processed_message, "Sorry, I don't know the answer to that.")
+    if(handle_voice_command(processed_message) is not None):
+        serial_result = handle_voice_command(processed_message)
+        answer = MOTION_RES.get(serial_result, "Sorry, I don't know the answer to that.")
+        # If the message is a command, handle it and return the result
+        print(f"Processed message: {processed_message}, Serial command result: {serial_result}")
+    else:
+        answer = qna_store.get(processed_message, "Sorry, I don't know the answer to that.")
 
     # Generate unique filename for each response
     audio_filename = f"response_{uuid.uuid4().hex}.mp3"
