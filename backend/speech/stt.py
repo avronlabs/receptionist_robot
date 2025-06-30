@@ -43,6 +43,7 @@ def transcribe_audio_file(audio_bytes, input_ext='.webm', model_size='base'):
         result = model.transcribe(tmp_in_path, language='en')
         text = result.get('text', '').strip()
         os.remove(tmp_in_path)
+        # print(f"[STT] Transcribed text: '{text}'")
         return {'text': text}
     except Exception as e:
         return {'error': f'Whisper transcription failed: {e}'}

@@ -60,7 +60,7 @@ loop_thread = threading.Thread(target=loop.run_forever, daemon=True)
 loop_thread.start()
 
 last_trigger_time = 0
-DEBOUNCE_SECONDS = 2  # Only trigger once every 2 seconds
+DEBOUNCE_SECONDS = 3  # Only trigger once every 2 seconds
 
 try:
     while True:

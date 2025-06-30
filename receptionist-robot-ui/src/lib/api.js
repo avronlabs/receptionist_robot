@@ -18,5 +18,6 @@ export async function transcribeAudio(audioBlob) {
     method: 'POST',
     body: formData,
   });
-  return await res.json(); // { text }
+  // Now returns { text, serial_result } or { error }
+  return await res.json();
 }

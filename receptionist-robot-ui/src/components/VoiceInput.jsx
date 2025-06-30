@@ -9,6 +9,9 @@ const VoiceInput = forwardRef(function VoiceInput({ onResult, disabled, onListen
   const wsRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const lastWakeTimeRef = useRef(0);
+  // Track last audio sent time
+  const lastAudioSentTimeRef = useRef(0);
 
   // Notify parent of listening state
   useEffect(() => {
@@ -29,7 +32,15 @@ const VoiceInput = forwardRef(function VoiceInput({ onResult, disabled, onListen
     wsRef.current.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
       if (event.data === 'wakeword' && !disabled) {
-        startMainRecognition();
+        const now = Date.now();
+        // Prevent starting a new recording if already listening
+        if (!isListening && (now - lastWakeTimeRef.current > 3000)) { // 3 seconds debounce
+          lastWakeTimeRef.current = now;
+          setIsWakewordEnabled(false); // Disable wakeword while recording
+          startMainRecognition();
+        } else {
+          console.log('Wakeword ignored due to debounce or already listening.');
+        }
       }
     };
     wsRef.current.onerror = (err) => {
@@ -41,11 +52,20 @@ const VoiceInput = forwardRef(function VoiceInput({ onResult, disabled, onListen
     return () => {
       if (wsRef.current) wsRef.current.close();
     };
-  }, [disabled]);
+  }, [disabled, isListening]);
+
+  // Wakeword enable/disable state
+  const [isWakewordEnabled, setIsWakewordEnabled] = useState(true);
 
   // Main recognition (after wake word or button)
   const startMainRecognition = useCallback(() => {
     if (disabled) return;
+    const now = Date.now();
+    if (now - lastAudioSentTimeRef.current < 3000) {
+      console.log('Audio send ignored due to 3s cooldown.');
+      return;
+    }
+    lastAudioSentTimeRef.current = now;
     setIsListening(true);
     setTranscript('');
     audioChunksRef.current = [];
@@ -66,13 +86,24 @@ const VoiceInput = forwardRef(function VoiceInput({ onResult, disabled, onListen
       mediaRecorder.onstop = async () => {
         try {
           const audioBlob = new Blob(audioChunksRef.current, { type: mimeType || 'audio/webm' });
-          const result = await transcribeAudio(audioBlob);
-          setTranscript(result.text || '');
-          setIsListening(false);
-          if (onResult) onResult(result.text || '');
+          // Only send if 3s have passed since last send
+          const nowSend = Date.now();
+          if (nowSend - lastAudioSentTimeRef.current >= 3000) {
+            lastAudioSentTimeRef.current = nowSend;
+            const result = await transcribeAudio(audioBlob);
+            setTranscript(result.text || '');
+            setIsListening(false);
+            setIsWakewordEnabled(true); // Re-enable wakeword after recording
+            if (onResult) onResult(result.text || '');
+          } else {
+            setTranscript('Audio send skipped due to cooldown.');
+            setIsListening(false);
+            setIsWakewordEnabled(true);
+          }
         } catch (err) {
           setTranscript('Transcription error');
           setIsListening(false);
+          setIsWakewordEnabled(true); // Re-enable wakeword after error
         }
       };
       mediaRecorder.start();
@@ -82,8 +113,32 @@ const VoiceInput = forwardRef(function VoiceInput({ onResult, disabled, onListen
     }).catch(err => {
       setTranscript('Microphone error');
       setIsListening(false);
+      setIsWakewordEnabled(true); // Re-enable wakeword after error
     });
   }, [disabled, onResult]);
+
+  // Only process wakeword if enabled
+  useEffect(() => {
+    if (!isWakewordEnabled && wsRef.current) {
+      wsRef.current.onmessage = null;
+    }
+    // Restore handler when enabled
+    if (isWakewordEnabled && wsRef.current) {
+      wsRef.current.onmessage = (event) => {
+        console.log('WebSocket message received:', event.data);
+        if (event.data === 'wakeword' && !disabled) {
+          const now = Date.now();
+          if (!isListening && (now - lastWakeTimeRef.current > 3000)) {
+            lastWakeTimeRef.current = now;
+            setIsWakewordEnabled(false);
+            startMainRecognition();
+          } else {
+            console.log('Wakeword ignored due to debounce or already listening.');
+          }
+        }
+      };
+    }
+  }, [isWakewordEnabled, disabled, isListening]);
 
   // Expose startMainRecognition to parent via ref (for manual button)
   useImperativeHandle(ref, () => ({

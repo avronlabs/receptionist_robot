@@ -7,6 +7,7 @@ import re
 from speech import tts  # ✅ Assuming tts.py is inside /speech
 
 from speech.stt import transcribe_audio_file
+from motion.serial_control import handle_voice_command
 
 app = Flask(__name__)
 CORS(app)
@@ -60,7 +61,12 @@ def transcribe_audio():
     if 'error' in result:
         print("Transcription error:", result['error'])
         return jsonify({'error': result['error']}), 400
-    return jsonify({'text': result['text']})
+    text = result['text']
+    serial_result = handle_voice_command(text)
+    print(f"Transcribed text: {text}, Serial command result: {serial_result}")
+    return jsonify({'text': text, 'serial_result': serial_result})
+
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5050)
