@@ -8,3 +8,4 @@ robot_env
 backend/speech/__pycache__/stt.cpython-310.pyc
 backend/speech/__pycache__/tts.cpython-310.pyc
 backend/__pycache__/app.cpython-310.pyc
+PROJECT_DESCRIPTION.md
