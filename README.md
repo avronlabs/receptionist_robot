@@ -20,6 +20,14 @@ python3 -m venv robot_env
 source robot_env/bin/activate
 ```
 
+## 2.1. (Raspberry Pi/Linux) Install Required System Packages
+Before installing Python dependencies, run:
+
+```bash
+sudo apt-get update
+sudo apt-get install python3-dev python3.10-venv libportaudio2 libasound-dev portaudio19-dev build-essential
+```
+
 ## 3. Install Python Dependencies
 ```bash
 pip install -r requirements.txt
@@ -44,12 +52,12 @@ You must see `v18.18.0` or newer. If not, upgrade Node.js:
 # Remove old Node.js
 sudo apt-get remove nodejs
 
-# Install Node.js 18.x (recommended)
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+# Install Node.js 20.x (recommended)
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
-# Or for Node.js 20.x (also supported)
-# curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+# Or for Node.js 18.x (also supported)
+# curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
 # sudo apt-get install -y nodejs
 
 # Verify
@@ -100,16 +108,30 @@ npm install
 - If you move `requirements.txt` to the main directory, always install dependencies from there.
 - For Raspberry Pi, ensure you have enough RAM (2GB+ recommended for TTS).
 - If running on different machines, update API/WebSocket URLs in the frontend config files.
+- **If you see an error like:**
+
+  ```
+  OSError: [Errno 8] Exec format error: '/home/rpi/receptionist_robot/backend/speech/piper-desktop/piper'
+  ```
+  This means the Piper binary is not compatible with your system architecture. Download the correct Piper binary for your platform:
+  - For Raspberry Pi (ARM64): [piper_arm64.tar.gz](https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_arm64.tar.gz)
+  - For Desktop Linux (AMD64): [piper_amd64.tar.gz](https://github.com/rhasspy/piper/releases/download/v1.2.0/piper_amd64.tar.gz)
+
+  Extract the archive and place the `piper` binary in `backend/speech/piper-desktop/`.
 
 ## Download Piper models (required for TTS)
 After cloning the repository, download the Piper model files (not included in git):
 
 ```bash
 cd backend/speech/piper-models
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
-# Or download other models as needed
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx
+
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json
+
 ```
+# Or download other models as needed
+- The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
+- Place the downloaded `.onnx` and `.onnx.json` files in the `backend/speech/piper-models` directory.
 
 - Do **not** commit `.onnx` or `.onnx.json` model files to git. They are ignored via `.gitignore`.
 - You may use a different model if you wish; update the path in `tts.py` accordingly.
