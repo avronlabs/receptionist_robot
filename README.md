@@ -87,7 +87,7 @@ wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-mediu
 wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
   ```
 
-# Or download other models as needed
+### Or download other models as needed
 - The above commands download the `amy` voice model. You can choose other voices from the [Piper models page](https://huggingface.co/rhasspy/piper-voices).
 - Place the downloaded `.onnx` and `.onnx.json` files in the `backend/speech/piper-models` directory.
 
