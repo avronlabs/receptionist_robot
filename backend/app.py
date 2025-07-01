@@ -8,6 +8,8 @@ from speech import tts  # ✅ Assuming tts.py is inside /speech
 
 from speech.stt import transcribe_audio_file
 from motion.serial_control import handle_voice_command
+import warnings
+warnings.filterwarnings("ignore", message="FP16 is not supported on CPU; using FP32 instead")
 
 app = Flask(__name__)
 CORS(app)
