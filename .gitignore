@@ -9,4 +9,6 @@ backend/speech/__pycache__
 /backend/speech/__pycache__/stt.cpython-310.pyc
 /backend/speech/__pycache__/tts.cpython-310.pyc
 /backend/__pycache__/app.cpython-310.pyc
+/backend/motion/__pycache__
+
 PROJECT_DESCRIPTION.md
