@@ -39,6 +39,7 @@ def ask():
     data = request.get_json()
     message = data.get('message', '').strip().lower()
     processed_message = preprocess_message(message)
+    serial_result = None
     if(handle_voice_command(processed_message) is not None):
         serial_result = handle_voice_command(processed_message)
         answer = MOTION_RES.get(serial_result, "Sorry, I don't know the answer to that.")
@@ -55,7 +56,7 @@ def ask():
     tts.text_to_speech(answer, audio_path)  # Assumes tts.py has text_to_speech(text, out_path)
 
     audio_url = f"http://localhost:5050/static/audio/{audio_filename}"
-    return jsonify({"answer": answer, "audio": audio_url})
+    return jsonify({"answer": answer, "audio": audio_url, "serial_result": serial_result})
 
 @app.route('/static/audio/<filename>')
 def serve_audio(filename):

@@ -4,7 +4,7 @@ from motion.command_mapper import map_voice_to_serial
 from speech.stt import transcribe_audio_file
 
 class ArduinoController:
-    def __init__(self, port='/dev/ttyACM0', baudrate=9600, timeout=2):
+    def __init__(self, port='/dev/ttyUSB0', baudrate=9600, timeout=2):
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
