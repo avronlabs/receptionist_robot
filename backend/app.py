@@ -41,12 +41,10 @@ def ask():
     data = request.get_json()
     message = data.get('message', '').strip().lower()
     processed_message = preprocess_message(message)
-    serial_result = None
-    if(handle_voice_command(processed_message) is not None):
-        serial_result = handle_voice_command(processed_message)
+    serial_result = handle_voice_command(processed_message)
+    if serial_result:
         answer = MOTION_RES.get(serial_result, "Sorry, I don't know the answer to that.")
-        # If the message is a command, handle it and return the result
-        print(f"Processed message: {processed_message}, Serial command result: {serial_result}")
+        print(f"/ask: Processed message: {processed_message}, Serial command result: {serial_result}")
     else:
         answer = qna_store.get(processed_message, "Sorry, I don't know the answer to that.")
 
@@ -77,9 +75,8 @@ def transcribe_audio():
         print("Transcription error:", result['error'])
         return jsonify({'error': result['error']}), 400
     text = result['text']
-    serial_result = handle_voice_command(text)
-    print(f"Transcribed text: {text}, Serial command result: {serial_result}")
-    return jsonify({'text': text, 'serial_result': serial_result})
+    print(f"/api/transcribe: Transcribed text: {text}")
+    return jsonify({'text': text})
 
 
 
