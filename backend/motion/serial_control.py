@@ -8,14 +8,22 @@ class ArduinoController:
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
-        try:
-            self.ser = serial.Serial(port, baudrate, timeout=timeout)
-            time.sleep(2)  # Wait for Arduino to reset
-        except Exception as e:
-            print(f"[ArduinoController] Could not open serial port: {e}")
-            self.ser = None
+        self.ser = None
+        self.open_port()
+
+    def open_port(self):
+        if self.ser is None or not (self.ser.is_open if self.ser else False):
+            print(f"[ArduinoController] Trying to open serial port: {self.port} at {self.baudrate} baud.")
+            try:
+                self.ser = serial.Serial(self.port, self.baudrate, timeout=self.timeout)
+                time.sleep(2)  # Allow Arduino to reset
+                print(f"[ArduinoController] Serial port {self.port} opened successfully.")
+            except Exception as e:
+                print(f"[ArduinoController] Could not open serial port {self.port}: {e}")
+                self.ser = None
 
     def send_command(self, command):
+        self.open_port()
         if self.ser and self.ser.is_open:
             try:
                 self.ser.write((command + '\n').encode())
@@ -23,16 +31,17 @@ class ArduinoController:
             except Exception as e:
                 print(f"[ArduinoController] Error sending command: {e}")
         else:
-            print("[ArduinoController] Serial port not open.")
+            print(f"[ArduinoController] Serial port not open on {self.port}. SERIAL NOT SENT.")
 
+# Create a global Arduino controller instance
 arduino = ArduinoController()
 
 def handle_voice_command(text):
     mapped_command = map_voice_to_serial(text)
     if mapped_command:
-        print(f"[Serial Control] Mapped command: {mapped_command}")
+        # print(f"[Serial Control] Mapped command: {mapped_command}")
         arduino.send_command(mapped_command)
         return mapped_command
     else:
-        print(f"[Serial Control] No valid command found for text: '{text}'")
+        print(f"[Serial Control] No valid command found for text: '{text}', mapped_command: '{mapped_command}'")
         return None
