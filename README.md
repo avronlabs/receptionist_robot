@@ -13,20 +13,21 @@
 git clone https://github.com/avronlabs/receptionist_robot.git
 cd receptionist_robot
 ```
+## 2. (Raspberry Pi/Linux) Install Required System Packages
+Before installing Python dependencies, run:
 
-## 2. Set Up Python Environment
+```bash
+sudo apt-get update
+sudo apt-get install python3-dev python3.10-venv python3-pip libportaudio2 libasound-dev portaudio19-dev build-essential
+```
+
+## 2.1. Set Up Python Environment
 ```bash
 python3 -m venv robot_env
 source robot_env/bin/activate
 ```
 
-## 2.1. (Raspberry Pi/Linux) Install Required System Packages
-Before installing Python dependencies, run:
 
-```bash
-sudo apt-get update
-sudo apt-get install python3-dev python3.10-venv libportaudio2 libasound-dev portaudio19-dev build-essential
-```
 
 ## 3. Install Python Dependencies
 ```bash
@@ -82,9 +83,9 @@ After cloning the repository, download the Piper model files (not included in gi
 ```bash
 cd backend/speech/piper-models
 
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx
 
-wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US-amy-medium/en_US-amy-medium.onnx.json
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium/en_US-amy-medium.onnx.json
 ```
 
 ### Or download other models as needed
