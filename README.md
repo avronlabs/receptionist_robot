@@ -27,8 +27,6 @@ python3 -m venv robot_env
 source robot_env/bin/activate
 ```
 
-
-
 ## 3. Install Python Dependencies
 ```bash
 pip install -r requirements.txt
