@@ -36,13 +36,16 @@ def preprocess_message(message):
     message = message.rstrip(' .!?')
     return message
 
-@app.route('/ask', methods=['POST'])
+@app.route('/api/ask', methods=['POST'])
 def ask():
     data = request.get_json()
     message = data.get('message', '').strip().lower()
     processed_message = preprocess_message(message)
     serial_result = handle_voice_command(processed_message)
-    if serial_result:
+    if serial_result == "__SERIAL_ERROR__":
+        # Generate TTS for error
+        answer = "Sorry, I couldn't talk to my legs."
+    elif serial_result:
         answer = MOTION_RES.get(serial_result, "Sorry, I don't know the answer to that.")
         print(f"/ask: Processed message: {processed_message}, Serial command result: {serial_result}")
     else:
@@ -78,7 +81,39 @@ def transcribe_audio():
     print(f"/api/transcribe: Transcribed text: {text}")
     return jsonify({'text': text})
 
+@app.route('/api/motion', methods=['POST'])
+def motion_command():
+    data = request.get_json()
+    command = data.get('command', '').strip().upper()
+    if not command:
+        return jsonify({'status': 'error', 'message': 'No command provided'}), 400
 
+    # Handle the motion command
+    serial_result = handle_voice_command(command)
+    if serial_result == "__SERIAL_ERROR__":
+        # Generate TTS for error
+        error_text = "Sorry, I couldn't talk to my legs."
+        audio_filename = f"response_{uuid.uuid4().hex}.mp3"
+        audio_path = os.path.join(AUDIO_DIR, audio_filename)
+        tts.text_to_speech(error_text, audio_path)
+        audio_url = f"http://localhost:5050/static/audio/{audio_filename}"
+        return jsonify({'status': 'error', 'message': error_text, 'audio': audio_url}), 500
+    elif serial_result:
+        response = MOTION_RES.get(serial_result, "Unknown command")
+        audio_filename = f"response_{uuid.uuid4().hex}.mp3"
+        audio_path = os.path.join(AUDIO_DIR, audio_filename)
+        tts.text_to_speech(response, audio_path)
+        audio_url = f"http://localhost:5050/static/audio/{audio_filename}"
+        print(f"/api/motion: Command: {command}, Serial result: {serial_result}")
+        return jsonify({'status': 'success', 'message': response, 'audio': audio_url}), 200
+    else:
+        # Generate TTS for error
+        error_text = "Sorry, I couldn't talk to my legs."
+        audio_filename = f"response_{uuid.uuid4().hex}.mp3"
+        audio_path = os.path.join(AUDIO_DIR, audio_filename)
+        tts.text_to_speech(error_text, audio_path)
+        audio_url = f"http://localhost:5050/static/audio/{audio_filename}"
+        return jsonify({'status': 'error', 'message': error_text, 'audio': audio_url}), 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5050)

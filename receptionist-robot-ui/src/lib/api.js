@@ -1,5 +1,5 @@
 export async function askAssistant(message) {
-  const res = await fetch("http://localhost:5050/ask", {
+  const res = await fetch("http://localhost:5050/api/ask", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message }),
@@ -20,4 +20,14 @@ export async function transcribeAudio(audioBlob) {
   });
   // Now returns { text, serial_result } or { error }
   return await res.json();
+}
+
+export async function sendMotionCommand(command) {
+  if (!command) return;
+  const res = await fetch('http://localhost:5050/api/motion', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ command }),
+  });
+  return await res.json(); // { status, message }
 }

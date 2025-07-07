@@ -30,18 +30,22 @@ class ArduinoController:
                 print(f"[ArduinoController] Sent: {command}")
             except Exception as e:
                 print(f"[ArduinoController] Error sending command: {e}")
+                raise  # Propagate error to caller
         else:
             print(f"[ArduinoController] Serial port not open on {self.port}. SERIAL NOT SENT.")
-
+            raise RuntimeError(f"Serial port not open on {self.port}")
 # Create a global Arduino controller instance
 arduino = ArduinoController()
 
 def handle_voice_command(text):
     mapped_command = map_voice_to_serial(text)
     if mapped_command:
-        # print(f"[Serial Control] Mapped command: {mapped_command}")
-        arduino.send_command(mapped_command)
-        return mapped_command
+        try:
+            arduino.send_command(mapped_command)
+            return mapped_command
+        except Exception as e:
+            print(f"[Serial Control] Error sending command: {e}")
+            return "__SERIAL_ERROR__"
     else:
         print(f"[Serial Control] No valid command found for text: '{text}', mapped_command: '{mapped_command}'")
         return None

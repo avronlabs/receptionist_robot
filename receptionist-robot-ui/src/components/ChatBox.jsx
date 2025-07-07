@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { askAssistant } from '../lib/api';
 import VoiceInput from './VoiceInput';
 import AudioPlayer from './AudioPlayer';
-import { Mic, } from 'lucide-react';
+import { Mic } from 'lucide-react';
 
 function ListeningWave({ active, idle }) {
   // Animate dots for both listening and idle (wakeup detection) states
@@ -120,7 +120,7 @@ export default function ChatBox() {
           tabIndex={-1}
           aria-label="Mic"
         >
-          <Mic size={40} />
+          <Mic size={56} />
         </button>
         {isListening && (
           <div className="text-blue-600 font-semibold mb-2 animate-pulse text-2xl">Listening...</div>

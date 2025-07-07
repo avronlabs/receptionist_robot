@@ -5,5 +5,8 @@
   "RIGHT": "Turning right.",
   "STOP": "Stopping.",
   "LED_ON": "Turning the lights on.",
-  "LED_OFF": "Turning the lights off."
+  "LED_OFF": "Turning the lights off.",
+  "ROTATE_LEFT": "Rotating counterclockwise.",
+  "ROTATE_RIGHT": "Rotating clockwise.",
+  "RESET": "Resetting the robot."
 }
