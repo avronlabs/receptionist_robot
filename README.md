@@ -1,3 +1,24 @@
+# Receptionist Robot – Project Description
+
+## Overview
+Receptionist Robot is a full-stack, voice-enabled assistant and robot control system for smart reception and front-desk environments. It features speech recognition, wake word detection, text-to-speech, Q&A, and manual robot control via a modern web interface. The system is modular, hardware-agnostic, and supports both desktop Linux and Raspberry Pi deployments.
+
+---
+
+## Features
+- **Wake Word Detection:** Real-time wake word listening using Vosk and a WebSocket backend.
+- **Speech-to-Text (STT):** Local, privacy-preserving speech recognition using Whisper.
+- **Text-to-Speech (TTS):** High-quality voice responses using Piper, with support for multiple models and platforms.
+- **Q&A and Command Handling:** JSON-based knowledge base for common questions and mapped robot commands.
+- **Manual Motion Control:** Web UI with a 3x3 grid of intuitive buttons for direct robot control (forward, back, left, right, rotate, stop, etc.).
+- **Audio Feedback:** All responses, including errors, are played back to the user in both chat and control interfaces.
+- **Error Handling:** Friendly error messages and audio feedback if the robot is unreachable or a command fails.
+- **Extensible UI:** Built with Next.js and React, featuring a dashboard, controls page, and settings page.
+- **Arduino/NodeMCU Integration:** Serial communication for controlling a differential drive robot base.
+- **Modular Backend:** Flask API with endpoints for chat, motion, transcription, and static audio serving.
+
+---
+
 # Receptionist Robot - Installation Guide
 
 ## Prerequisites
