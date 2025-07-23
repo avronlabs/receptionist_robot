@@ -11,6 +11,9 @@ from motion.serial_control import handle_voice_command
 import warnings
 warnings.filterwarnings("ignore", message="FP16 is not supported on CPU; using FP32 instead")
 
+import openai
+from dotenv import load_dotenv
+
 app = Flask(__name__)
 CORS(app)
 
@@ -28,6 +31,10 @@ with open(QNA_PATH, 'r') as f:
 with open(MOTION_RES_PATH, 'r') as f:
     MOTION_RES = json.load(f)
 
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai.api_key = OPENAI_API_KEY
+
 def preprocess_message(message):
     # Remove wake word (alexa) if present at the start
     message = message.strip().lower()
@@ -35,6 +42,25 @@ def preprocess_message(message):
     # Remove punctuation at the end
     message = message.rstrip(' .!?')
     return message
+
+def get_gpt_answer(question):
+    if not OPENAI_API_KEY:
+        return "Sorry, I couldn't find an answer to that."
+    try:
+        client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        response = client.chat.completions.create(
+            model="gpt-4.1-nano",
+            messages=[
+                {"role": "system", "content": "Answer very briefly and precisely. Use one or two sentences only."},
+                {"role": "user", "content": question}
+            ],
+            max_tokens=48,
+            temperature=0.5,
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"[GPT API] Error: {e}")
+        return "Sorry, I couldn't find an answer to that."
 
 @app.route('/api/ask', methods=['POST'])
 def ask():
@@ -48,8 +74,11 @@ def ask():
     elif serial_result:
         answer = MOTION_RES.get(serial_result, "Sorry, I don't know the answer to that.")
         print(f"/ask: Processed message: {processed_message}, Serial command result: {serial_result}")
-    else:
+    elif processed_message in qna_store:
         answer = qna_store.get(processed_message, "Sorry, I don't know the answer to that.")
+    else:
+        # Use GPT if not found in QnA or motion
+        answer = get_gpt_answer(processed_message)
 
     # Generate unique filename for each response
     audio_filename = f"response_{uuid.uuid4().hex}.mp3"

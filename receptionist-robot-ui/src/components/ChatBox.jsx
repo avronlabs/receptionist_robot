@@ -51,7 +51,7 @@ export default function ChatBox() {
   const [isLoading, setIsLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [liveTranscript, setLiveTranscript] = useState('');
-  const clearTimeoutRef = useRef();
+  // Remove timeout-based auto-clear
   const voiceInputRef = useRef();
 
   // Listen for VoiceInput events
@@ -63,19 +63,13 @@ export default function ChatBox() {
   const handleVoiceListening = (listening) => setIsListening(listening);
   const handleVoiceTranscript = (t) => setLiveTranscript(t);
 
-  // Auto-clear after 10s, but reset listening state immediately after bot response
-  useEffect(() => {
-    if (userMessage || botMessage.text) {
-      clearTimeout(clearTimeoutRef.current);
-      clearTimeoutRef.current = setTimeout(() => {
-        setUserMessage('');
-        setBotMessage({ text: '', audio: '' });
-        setIsListening(false); // Reset listening state immediately after clear
-        setLiveTranscript('');
-      }, 10000);
-    }
-    return () => clearTimeout(clearTimeoutRef.current);
-  }, [userMessage, botMessage]);
+  // Auto-clear only after audio finishes playing
+  const handleAudioEnd = () => {
+    setUserMessage('');
+    setBotMessage({ text: '', audio: '' });
+    setIsListening(false);
+    setLiveTranscript('');
+  };
 
   // Reset listening state as soon as bot finishes responding
   useEffect(() => {
@@ -158,7 +152,7 @@ export default function ChatBox() {
           <div className="flex justify-start w-full mb-2">
             <div className="max-w-[80vw] rounded-2xl px-6 py-4 shadow-md text-2xl bg-gray-100 text-gray-900">
               <p className="whitespace-pre-wrap break-words">{botMessage.text}</p>
-              {botMessage.audio && <AudioPlayer audioSrc={botMessage.audio} />}
+              {botMessage.audio && <AudioPlayer audioSrc={botMessage.audio} onEnded={handleAudioEnd} />}
             </div>
           </div>
         )}

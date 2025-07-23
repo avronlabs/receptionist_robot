@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-export default function AudioPlayer({ audioSrc }) {
+export default function AudioPlayer({ audioSrc, onEnded }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoPlayFailed, setAutoPlayFailed] = useState(false);
   const audioRef = useRef(null);
@@ -9,7 +9,14 @@ export default function AudioPlayer({ audioSrc }) {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      if (typeof onEnded === 'function') {
+        setTimeout(() => {
+          onEnded();
+        }, 1500);
+      }
+    };
     audio.addEventListener('ended', handleEnded);
     // Try to auto-play when src changes
     audio.play()
